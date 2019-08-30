@@ -1,0 +1,20 @@
+{% extends 'front/layout/layout.html.twig' %}
+
+{% block title %}Bloc notes
+{% endblock %}
+
+{% block content %}
+    <div class="d-flex justify-content-center">
+        <div class="jumbotron w-75 p-4" style="margin-top:50px;">
+            {% include 'front/todo_list/_form.html.twig' with {'form':form} only %}
+            </div>
+        </div>
+    </div>
+    <!-- Modal -->
+{% endblock %}
+
+{% block javascripts %}
+
+    {{ parent() }}
+
+{% endblock %}

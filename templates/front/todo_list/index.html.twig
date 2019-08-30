@@ -1,0 +1,70 @@
+{% extends 'front/layout/layout.html.twig' %}
+
+{% block title %}Bloc notes{% endblock %}
+
+{% block content %}
+    <div class="d-flex justify-content-center">
+        <div class="jumbotron w-75 p-4" style="margin-top:50px;">
+            {% include "front/layout/flash-messages.html.twig" with {'flashBag': app.session.flashBag } only %}
+            <button type="button" class="btn btn-primary mb-4" data-toggle="modal" data-target="#create-task">
+                Nouvelle tâche
+            </button>
+            <table class="table table-hover" id="js-reload">
+                <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Description</th>
+                    <th>Date de fin</th>
+                    <th>Action</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for task in pagination %}
+                    <tr class="js-tr{{ task.id }}{% if task.isCompleted == true %} font-strikethrough font-weight-bolder bg-warning {% endif %}">
+                        <td>{{ task.name }}</td>
+                        <td>{{ task.description }}</td>
+                        <td>{{ task.endedAt|date('d/m/Y H:i') }}</td>
+                        <td>
+                            <div class="dropdown">
+                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Actions
+                                </button>
+                                <div class="dropdown-menu" style="height:70px;" aria-labelledby="dropdownMenuButton">
+                                    <a href="{{ path('front_task_edit',{'id': task.id}) }}" class="dropdown-item">
+                                        Éditer
+                                    </a>
+                                    <form method="post" action="{{ path('task_delete', {'id': task.id}) }}"
+                                          onsubmit="return confirm('Êtes vous sûr de vouloir supprimer?');">
+                                        <input type="hidden" name="_method" value="DELETE">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ task.id) }}">
+                                        <button class="dropdown-item text-danger"><b>Supprimer</b></button>
+                                    </form>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="d-flex pt-3">
+                            <div class="custom-control custom-switch ">
+                                <input type="checkbox" class=" custom-control-input" id="customSwitch{{ task.id }}"
+                                       {% if task.isCompleted == false %}checked{% endif %} data-id="{{ task.id }}">
+                                <label class="custom-control-label cursor-link" for="customSwitch{{ task.id }}"></label>
+                            </div>
+                            <div class="spinner-border text-primary hidden spinner-border-sm" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <div class="pagination">
+                {{ knp_pagination_render(pagination) }}
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Create Form -->
+    {% include 'front/todo_list/_modal.html.twig' with {'form':form} only %}
+
+{% endblock %}

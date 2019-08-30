@@ -1,0 +1,23 @@
+{% include "front/layout/flash-messages.html.twig" with {'flashBag': app.session.flashBag } only %}
+            {{ form_start(form) }}
+<div class="form-group">
+    {{ form_widget(form.name,{'attr':{class:'form-control', placeholder:'Nom'}}) }}
+    {{ form_errors(form.name) }}
+</div>
+
+<div class="form-group">
+    {{ form_widget(form.description,{'attr':{class:'form-control', placeholder:'Description'}}) }}
+    {{ form_errors(form.description) }}
+</div>
+
+<div class="input-append date form_datetime" data-date="2013-02-21T15:25:00Z">
+    {{ form_widget(form.endedAt,{'attr':{class:'form-control js-datetimepicker',placeholder:'Date d\'échéance',autocomplete:'off'}}) }}
+    {{ form_errors(form.endedAt) }}
+    <span class="add-on"><i class="icon-remove"></i></span>
+    <span class="add-on"><i class="icon-calendar"></i></span>
+</div>
+
+<div class="form-group mt-2">
+    <a href="{{ path('front_todo_list') }}" class="btn btn-secondary">Retour</a>
+    <button class="btn btn-primary" type="submit">Enregistrer</button>
+{{ form_end(form) }}
