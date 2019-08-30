@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Task;
+use App\Entity\TaskSearch;
+use App\Form\TaskSearchType;
 use App\Form\TaskType;
 use App\Repository\TaskRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -17,9 +19,11 @@ class ToDoListController extends AbstractController
 {
     /**
      * @Route("/", name="front_todo_list")
-     * @param TaskRepository $taskRepository
+     * @param TaskRepository     $taskRepository
      *
-     * @param Request        $request
+     * @param Request            $request
+     *
+     * @param PaginatorInterface $paginator
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -30,6 +34,10 @@ class ToDoListController extends AbstractController
         $form = $this->createForm(TaskType::class, $task);
         $form->handleRequest($request);
 
+        $taskSearch = new TaskSearch();
+        $formSearch = $this->createForm(TaskSearchType::class, $taskSearch);
+        $formSearch->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($task);
@@ -38,17 +46,21 @@ class ToDoListController extends AbstractController
 
             return $this->redirectToRoute('front_todo_list');
         }
-
+        $limit = 10;
+        if($request->get('count-items')){
+            $limit = $request->get('count-items');
+        }
         $pagination = $paginator->paginate(
-            $taskRepository->findByCreatedAtQuery(), /* query NOT result */
-            $request->query->getInt('page', 1), /*page number*/
-            10 /*limit per page*/
+            $taskRepository->findByCreatedAtQuery($taskSearch),
+            $request->query->getInt('page', 1),
+            $limit
         );
 
 
         return $this->render('front/todo_list/index.html.twig', [
             'pagination' => $pagination,
-            'form'       => $form->createView()
+            'form'       => $form->createView(),
+            'formSearch' => $formSearch->createView()
         ]);
     }
 
@@ -114,7 +126,8 @@ class ToDoListController extends AbstractController
         }
         else {
             $task->setIsCompleted(false);
-            $this->addFlash('warning', 'Il vous reste du boulot, gare à la procrastination!');
+            $this->addFlash('warning', '
+            Il vous reste du boulot, gare à la procrastination!');
         }
         $em->persist($task);
         $em->flush();

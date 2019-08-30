@@ -3,8 +3,10 @@
 namespace App\Repository;
 
 use App\Entity\Task;
+use App\Entity\TaskSearch;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\ORM\Query;
 
 /**
  * @method Task|null find($id, $lockMode = null, $lockVersion = null)
@@ -20,14 +22,29 @@ class TaskRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param string $order
+     * @param TaskSearch $search
+     * @param string     $order
      *
      * @return \Doctrine\ORM\Query Returns an array of Task objects
      */
-    public function findByCreatedAtQuery($order='DESC')
+    public function findByCreatedAtQuery(TaskSearch $search, $order = 'DESC'): Query
     {
-        return $this->createQueryBuilder('t')
-                    ->orderBy('t.createdAt', $order)
-                    ->getQuery();
+        $query = $this->createQueryBuilder('t')
+                      ->orderBy('t.endedAt', $order);
+
+        if ($search->getisCompleted() !== null) {
+            $query->andWhere('t.isCompleted = :boolean')
+                  ->setParameter('boolean', $search->getisCompleted());
+        }
+        if ($search->getMinDate()) {
+            $query->andWhere('t.endedAt >= :minDate')
+                  ->setParameter('minDate', $search->getMinDate());
+        }
+        if ($search->getMaxDate()) {
+            $query->andWhere('t.endedAt <= :maxDate')
+                  ->setParameter('maxDate', $search->getMaxDate());
+        }
+
+        return $query->getQuery();
     }
 }

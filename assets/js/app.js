@@ -9,6 +9,7 @@ jQuery('.js-datetimepicker').datetimepicker({
     format: 'd-m-Y H:i',
     step  : 10
 });
+
 $('.custom-control-input').change(function() {
 
     const $this = $(this),
