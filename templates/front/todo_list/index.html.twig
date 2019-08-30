@@ -12,6 +12,7 @@
             <table class="table table-hover" id="js-reload">
                 <thead>
                 <tr>
+                    <th>État</th>
                     <th>Nom</th>
                     <th>Description</th>
                     <th>Date de fin</th>
@@ -21,10 +22,16 @@
                 </thead>
                 <tbody>
                 {% for task in pagination %}
-                    <tr class="js-tr{{ task.id }}{% if task.isCompleted == true %} font-strikethrough font-weight-bolder bg-warning {% endif %}">
+                    <tr class="js-tr{{ task.id }}{% if task.isCompleted == true %} font-strikethrough font-weight-bolder {% endif %}">
+                        <td>{% if task.isCompleted == true %}
+                                <span class="badge badge-success">&#10003;</span>
+                            {% else %}
+                                <span class="badge badge-danger">En cours</span>
+                            {% endif %}
+                        </td>
                         <td>{{ task.name }}</td>
                         <td>{{ task.description }}</td>
-                        <td>{{ task.endedAt|date('d/m/Y H:i') }}</td>
+                        <td>{{ task.endedAt|localizeddate ('none', 'none', 'fr_FR', null, "cccc d MMMM Y 'à' hh:mm") }}</td>
                         <td>
                             <div class="dropdown">
                                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"

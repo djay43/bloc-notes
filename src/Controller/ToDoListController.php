@@ -35,6 +35,7 @@ class ToDoListController extends AbstractController
             $entityManager->persist($task);
             $entityManager->flush();
             $this->addFlash('success', 'Votre tâche a bien été créée :-)');
+
             return $this->redirectToRoute('front_todo_list');
         }
 
@@ -108,12 +109,14 @@ class ToDoListController extends AbstractController
     {
         if ($request->get('checked') === 'false') {
             $task->setIsCompleted(true);
+            $this->addFlash('success', ' et même <b>Incroyable!</b> Vous avez réalisée une tâche!');
+
         }
         else {
             $task->setIsCompleted(false);
+            $this->addFlash('warning', 'Il vous reste du boulot, gare à la procrastination!');
         }
         $em->persist($task);
-
         $em->flush();
 
         return new JsonResponse($request->get('checked'));
