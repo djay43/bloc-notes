@@ -30,6 +30,3 @@ services:
           tags:
               - { name: twig.extension }
 
-    App\Service\Manager\TaskManager:
-        class: App\Service\Manager\TaskManager
-        arguments: ['@doctrine.orm.default_entity_manager']

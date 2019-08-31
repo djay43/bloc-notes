@@ -1,6 +1,6 @@
 {% extends 'front/layout/layout.html.twig' %}
 
-{% block title %}Bloc notes{% endblock %}
+{% block title %}Accueil - Bloc notes{% endblock %}
 
 {% block content %}
     <!-- Flash Messages-->
@@ -43,7 +43,7 @@
                             <a href="{{ path('task_edit',{'slug': task.slug}) }}" class="dropdown-item">
                                 Éditer
                             </a>
-                            <form method="post" action="{{ path('task_delete', {'id': task.id}) }}"
+                            <form method="post" action="{{ path('task_delete', {'slug': task.slug}) }}"
                                   onsubmit="return confirm('Êtes vous sûr de vouloir supprimer?');">
                                 <input type="hidden" name="_method" value="DELETE">
                                 <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ task.id) }}">

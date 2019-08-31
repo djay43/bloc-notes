@@ -60,7 +60,7 @@ class TaskController extends AbstractController
     }
 
     /**
-     * @Route("/delete/task/{id}", name="task_delete", methods={"DELETE"})
+     * @Route("/delete/task/{slug}", name="task_delete", methods={"DELETE"})
      * @param Request $request
      * @param Task    $task
      *
