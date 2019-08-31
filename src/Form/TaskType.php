@@ -25,12 +25,11 @@ class TaskType extends AbstractType
         $builder
             ->add('name', TextType::class)
             ->add('description', TextType::class)
-            ->add('endedAt', DateType::class,[
+            ->add('endedAt', DateType::class, [
                 'widget' => 'single_text',
-                'html5'=>false,
+                'html5'  => false,
                 'format' => 'dd-M-yyyy H:mm',
-            ])
-        ;
+            ]);
     }
 
     /**
@@ -39,7 +38,7 @@ class TaskType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => Task::class,
-        ]);
+                                   'data_class' => Task::class,
+                               ]);
     }
 }

@@ -7,7 +7,7 @@
     {% include "front/layout/flash-messages.html.twig" with {'flashBag': app.session.flashBag } only %}
 
     <!-- Filter Form-->
-    {% include "front/todo_list/_filter-form.html.twig" with {formSearch : formSearch} only %}
+    {% include "front/task/_filter-form.html.twig" with {formSearch : formSearch} only %}
     <table class="table table-hover" id="js-reload">
         <thead>
         <tr>
@@ -92,6 +92,6 @@
     </div>
 
     <!-- Modal Create Form -->
-    {% include 'front/todo_list/_modal.html.twig' with {'form':form} only %}
+    {% include 'front/task/_modal.html.twig' with {'form':form} only %}
 
 {% endblock %}

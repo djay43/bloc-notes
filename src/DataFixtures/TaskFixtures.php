@@ -9,6 +9,10 @@ use Faker;
 
 class TaskFixtures extends Fixture
 {
+    /**
+     * 15 Random Tasks
+     * @param ObjectManager $manager
+     */
     public function load(ObjectManager $manager)
     {
         $faker = Faker\Factory::create('fr_FR');

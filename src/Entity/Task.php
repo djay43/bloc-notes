@@ -146,11 +146,19 @@ class Task
         return $this;
     }
 
+    /**
+     * @return bool|null
+     */
     public function getIsCompleted(): ?bool
     {
         return $this->isCompleted;
     }
 
+    /**
+     * @param bool $isCompleted
+     *
+     * @return Task
+     */
     public function setIsCompleted(bool $isCompleted): self
     {
         $this->isCompleted = $isCompleted;
@@ -158,11 +166,19 @@ class Task
         return $this;
     }
 
+    /**
+     * @return null|string
+     */
     public function getSlug(): ?string
     {
         return $this->slug;
     }
 
+    /**
+     * @param string $slug
+     *
+     * @return Task
+     */
     public function setSlug(string $slug): self
     {
         $this->slug = $slug;

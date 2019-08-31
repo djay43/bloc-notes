@@ -17,16 +17,13 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 
-class ToDoListController extends AbstractController
+class TaskController extends AbstractController
 {
     /**
      * @Route("/", name="task_list")
      * @param TaskRepository     $taskRepository
-     *
      * @param Request            $request
-     *
      * @param PaginatorInterface $paginator
-     *
      * @param Pagination         $paginationManager
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -55,7 +52,7 @@ class ToDoListController extends AbstractController
         }
 
 
-        return $this->render('front/todo_list/index.html.twig', [
+        return $this->render('front/task/index.html.twig', [
             'pagination' => $paginationManager->createPagination($request, $paginator, $taskRepository, $taskSearch),
             'form'       => $form->createView(),
             'formSearch' => $formSearch->createView()
@@ -100,7 +97,7 @@ class ToDoListController extends AbstractController
             return $this->redirectToRoute('task_list');
         }
 
-        return $this->render('front/todo_list/edit.html.twig', [
+        return $this->render('front/task/edit.html.twig', [
             'task' => $task,
             'form' => $form->createView(),
         ]);
@@ -110,7 +107,6 @@ class ToDoListController extends AbstractController
      * @Route("/task/manage/status/{id}", options={"expose"=true}, name="change-task-status", methods={"GET","POST"})
      * @param Task                   $task
      * @param Request                $request
-     *
      * @param EntityManagerInterface $em
      *
      * @return JsonResponse

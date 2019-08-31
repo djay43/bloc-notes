@@ -26,22 +26,22 @@ class TaskSearchType extends AbstractType
             ->add('minDate', DateType::class, [
                 'widget'   => 'single_text',
                 'html5'    => false,
-                'format' => 'dd-M-yyyy H:mm',
+                'format'   => 'dd-M-yyyy H:mm',
                 'required' => false
             ])
             ->add('maxDate', DateType::class, [
                 'widget'   => 'single_text',
                 'html5'    => false,
-                'format' => 'dd-M-yyyy H:mm',
+                'format'   => 'dd-M-yyyy H:mm',
                 'required' => false
 
             ])
             ->add('isCompleted', ChoiceType::class, [
-                'choices'  => [
-                    'Fait' => true,
+                'choices'     => [
+                    'Fait'     => true,
                     'En cours' => false,
                 ],
-                'required' => false,
+                'required'    => false,
                 'placeholder' => 'Choisissez un statut',
             ]);
     }

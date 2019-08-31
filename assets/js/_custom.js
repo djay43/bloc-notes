@@ -8,7 +8,7 @@ function initDateTimePicker() {
     jQuery.datetimepicker.setLocale('fr');
     jQuery('.js-datetimepicker').datetimepicker({
         format: 'd-m-Y H:i',
-        step  : 10
+        step  : 10,
     });
 }
 
