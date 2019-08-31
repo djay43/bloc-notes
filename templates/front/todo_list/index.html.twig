@@ -3,111 +3,92 @@
 {% block title %}Bloc notes{% endblock %}
 
 {% block content %}
+    <!-- Flash Messages-->
+    {% include "front/layout/flash-messages.html.twig" with {'flashBag': app.session.flashBag } only %}
 
-    <div class="d-flex justify-content-center">
-        <div class="jumbotron w-75 p-4" style="margin-top:50px;">
-            {% include "front/layout/flash-messages.html.twig" with {'flashBag': app.session.flashBag } only %}
-            {{ form_start(formSearch) }}
-            <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#create-task">
-                Nouvelle tâche
-            </button>
-            <div class="d-flex justify-content-center">
+    <!-- Filter Form-->
+    {% include "front/todo_list/_filter-form.html.twig" with {formSearch : formSearch} only %}
+    <table class="table table-hover" id="js-reload">
+        <thead>
+        <tr>
+            <th>Numéro</th>
+            <th>Statut</th>
+            <th>Nom</th>
+            <th>Description</th>
+            <th>Date de fin</th>
+            <th>Action</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for task in pagination %}
+            <tr class="js-tr{{ task.id }}{% if task.isCompleted == true %} font-strikethrough font-weight-bolder {% endif %}">
+                <td>{{ loop.index }}</td>
+                <td>{% if task.isCompleted == true %}
+                        <span class="badge badge-success">&#10003; &nbsp;Fait</span>
+                    {% else %}
+                        <span class="badge badge-danger">En cours</span>
+                    {% endif %}
+                </td>
+                <td>{{ task.name }}</td>
+                <td>{{ task.description }}</td>
+                <td>{{ task.endedAt|localizeddate ('none', 'none', 'fr_FR', null, "cccc d MMMM Y 'à' hh:mm") }}</td>
+                <td>
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Actions
+                        </button>
+                        <div class="dropdown-menu" style="height:70px;" aria-labelledby="dropdownMenuButton">
+                            <a href="{{ path('task_edit',{'id': task.id}) }}" class="dropdown-item">
+                                Éditer
+                            </a>
+                            <form method="post" action="{{ path('task_delete', {'id': task.id}) }}"
+                                  onsubmit="return confirm('Êtes vous sûr de vouloir supprimer?');">
+                                <input type="hidden" name="_method" value="DELETE">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ task.id) }}">
+                                <button class="dropdown-item text-danger"><b>Supprimer</b></button>
+                            </form>
+                        </div>
+                    </div>
+                </td>
+                <td class="d-flex pt-3">
+                    <div class="custom-control custom-switch " data-toggle="tooltip" data-placement="top"
+                         title=""
+                         data-original-title="Changer le statut">
+                        <input type="checkbox" class=" custom-control-input" id="customSwitch{{ task.id }}"
+                               {% if task.isCompleted == false %}checked{% endif %} data-id="{{ task.id }}"
+                        >
+                        <label class="custom-control-label cursor-link" for="customSwitch{{ task.id }}"></label>
+                    </div>
+                    <div class="spinner-border text-primary hidden spinner-border-sm" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 
-                <h3 class="mr-3">Filtrer par</h3>
-                <div class="form-group ml-2">
-                    {{ form_widget(formSearch.maxDate,{'attr':{'class': 'form-control js-datetimepicker', 'placeholder':'Avant le','autocomplete':'off'}}) }}
-                    {{ form_errors(formSearch.maxDate) }}
+    <!--Pagination & Count items Filter-->
+    <div class="pagination">
+        {{ knp_pagination_render(pagination) }}
+    </div>
 
-                </div>
-
-                <div class="form-group ml-2">
-                    {{ form_widget(formSearch.minDate,{'attr':{'class': 'form-control js-datetimepicker', 'placeholder':'Après le','autocomplete':'off'}}) }}
-                    {{ form_errors(formSearch.minDate) }}
-                </div>
-                <div class="form-group ml-2">
-                    {{ form_widget(formSearch.isCompleted,{'attr':{'class': 'form-control'}}) }}
-                    {{ form_errors(formSearch.isCompleted) }}
-                </div>
-                <div class="form-group">
-                    <button type="submit" class="btn btn-success ml-2">Filtrer</button>
-                    <a href="{{ path('front_todo_list') }}" class="btn btn-secondary">Réinitialiser</a>
-                </div>
-                {{ form_end(formSearch) }}
-            </div>
-            <table class="table table-hover" id="js-reload">
-                <thead>
-                <tr>
-                    <th>Numéro</th>
-                    <th>État</th>
-                    <th>Nom</th>
-                    <th>Description</th>
-                    <th>Date de fin</th>
-                    <th>Action</th>
-                    <th>Action</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for task in pagination %}
-                    <tr class="js-tr{{ task.id }}{% if task.isCompleted == true %} font-strikethrough font-weight-bolder {% endif %}">
-                        <td>{{ loop.index }}</td>
-                        <td>{% if task.isCompleted == true %}
-                                <span class="badge badge-success">&#10003;</span>
-                            {% else %}
-                                <span class="badge badge-danger">En cours</span>
-                            {% endif %}
-                        </td>
-                        <td>{{ task.name }}</td>
-                        <td>{{ task.description }}</td>
-                        <td>{{ task.endedAt|localizeddate ('none', 'none', 'fr_FR', null, "cccc d MMMM Y 'à' hh:mm") }}</td>
-                        <td>
-                            <div class="dropdown">
-                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
-                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Actions
-                                </button>
-                                <div class="dropdown-menu" style="height:70px;" aria-labelledby="dropdownMenuButton">
-                                    <a href="{{ path('front_task_edit',{'id': task.id}) }}" class="dropdown-item">
-                                        Éditer
-                                    </a>
-                                    <form method="post" action="{{ path('task_delete', {'id': task.id}) }}"
-                                          onsubmit="return confirm('Êtes vous sûr de vouloir supprimer?');">
-                                        <input type="hidden" name="_method" value="DELETE">
-                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ task.id) }}">
-                                        <button class="dropdown-item text-danger"><b>Supprimer</b></button>
-                                    </form>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="d-flex pt-3">
-                            <div class="custom-control custom-switch ">
-                                <input type="checkbox" class=" custom-control-input" id="customSwitch{{ task.id }}"
-                                       {% if task.isCompleted == false %}checked{% endif %} data-id="{{ task.id }}">
-                                <label class="custom-control-label cursor-link" for="customSwitch{{ task.id }}"></label>
-                            </div>
-                            <div class="spinner-border text-primary hidden spinner-border-sm" role="status">
-                                <span class="sr-only">Loading...</span>
-                            </div>
-                        </td>
-                    </tr>
+    <div class="form-group">
+        {% set value = app.request.get('count-items') %}
+        <form action="{{ path('task_list') }}" class="d-flex ">
+            <label for="count-items" class="col-form-label mr-3">Résultats par page</label>
+            <select name="count-items" id="count-items" class="form-control w-25 mr-3">
+                <option value="10" {% if value == 10 %} selected {% endif %} class="font-strikethrough">10 (par
+                    défaut)
+                </option>
+                {% for i in 1..3 %}
+                    <option value="{{ i*50 }}" {% if value == i*50 %} selected {% endif %}>{{ i*50 }}</option>
                 {% endfor %}
-                </tbody>
-            </table>
-            <div class="pagination">
-                {{ knp_pagination_render(pagination) }}
-            </div>
-            <div class="form-group">
-                {% set value = app.request.get('count-items') %}
-                <form action="{{ path('front_todo_list') }}" class="d-flex ">
-                    <select name="count-items" class="form-control w-25">
-                        <option value="10" {% if value == 10 %} selected {% endif %} class="font-strikethrough">10 (par défaut)</option>
-                        {% for i in 1..3 %}
-                            <option value="{{ i*50 }}" {% if value == i*50 %} selected {% endif %}>{{ i*50 }}</option>
-                        {% endfor %}
-                    </select>
-                    <button type="submit" class="btn btn-secondary ">Modifier le nombre de tâche visibles</button>
-                </form>
-            </div>
-        </div>
+            </select>
+            <button type="submit" class="btn btn-secondary ">Changer</button>
+        </form>
     </div>
 
     <!-- Modal Create Form -->

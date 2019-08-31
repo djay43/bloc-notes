@@ -38,11 +38,11 @@ class TaskSearchType extends AbstractType
             ])
             ->add('isCompleted', ChoiceType::class, [
                 'choices'  => [
-                    'Yes' => true,
-                    'No' => false,
+                    'Fait' => true,
+                    'En cours' => false,
                 ],
-                'required' => false
-
+                'required' => false,
+                'placeholder' => 'Choisissez un statut',
             ]);
     }
 

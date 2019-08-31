@@ -9,3 +9,8 @@
 .hidden {
     display : none;
 }
+
+.main-wrap {
+    margin-top : 100px;
+    width      : 95%;
+}

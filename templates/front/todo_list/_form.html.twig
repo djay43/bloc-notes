@@ -1,5 +1,4 @@
-{% include "front/layout/flash-messages.html.twig" with {'flashBag': app.session.flashBag } only %}
-            {{ form_start(form) }}
+{{ form_start(form) }}
 <div class="form-group">
     {{ form_widget(form.name,{'attr':{class:'form-control', placeholder:'Nom'}}) }}
     {{ form_errors(form.name) }}
@@ -18,6 +17,7 @@
 </div>
 
 <div class="form-group mt-2">
-    <a href="{{ path('front_todo_list') }}" class="btn btn-secondary">Retour</a>
+    <a href="{{ path('task_list') }}" class="btn btn-secondary">Retour</a>
     <button class="btn btn-primary" type="submit">Enregistrer</button>
+</div>
 {{ form_end(form) }}

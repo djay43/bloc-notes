@@ -7,6 +7,7 @@ use App\Entity\TaskSearch;
 use App\Form\TaskSearchType;
 use App\Form\TaskType;
 use App\Repository\TaskRepository;
+use App\Service\Manager\Pagination;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,19 +16,25 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+
 class ToDoListController extends AbstractController
 {
     /**
-     * @Route("/", name="front_todo_list")
+     * @Route("/", name="task_list")
      * @param TaskRepository     $taskRepository
      *
      * @param Request            $request
      *
      * @param PaginatorInterface $paginator
      *
+     * @param Pagination         $paginationManager
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function index(TaskRepository $taskRepository, Request $request, PaginatorInterface $paginator)
+    public function index(TaskRepository $taskRepository,
+                          Request $request,
+                          PaginatorInterface $paginator,
+                          Pagination $paginationManager)
 
     {
         $task = new Task();
@@ -44,28 +51,19 @@ class ToDoListController extends AbstractController
             $entityManager->flush();
             $this->addFlash('success', 'Votre tâche a bien été créée :-)');
 
-            return $this->redirectToRoute('front_todo_list');
+            return $this->redirectToRoute('task_list');
         }
-        $limit = 10;
-        if($request->get('count-items')){
-            $limit = $request->get('count-items');
-        }
-        $pagination = $paginator->paginate(
-            $taskRepository->findByCreatedAtQuery($taskSearch),
-            $request->query->getInt('page', 1),
-            $limit
-        );
 
 
         return $this->render('front/todo_list/index.html.twig', [
-            'pagination' => $pagination,
+            'pagination' => $paginationManager->createPagination($request, $paginator, $taskRepository, $taskSearch),
             'form'       => $form->createView(),
             'formSearch' => $formSearch->createView()
         ]);
     }
 
     /**
-     * @Route("/{id}", name="task_delete", methods={"DELETE"})
+     * @Route("/delete/task/{id}", name="task_delete", methods={"DELETE"})
      * @param Request $request
      * @param Task    $task
      *
@@ -80,11 +78,11 @@ class ToDoListController extends AbstractController
             $this->addFlash('success', 'Votre tâche a bien été supprimée :-)');
         }
 
-        return $this->redirectToRoute('front_todo_list');
+        return $this->redirectToRoute('task_list');
     }
 
     /**
-     * @Route("/edit/{id}", name="front_task_edit", methods={"GET","POST"})
+     * @Route("/edit/task/{id}", name="task_edit", methods={"GET","POST"})
      * @param Request $request
      * @param Task    $task
      *
@@ -99,7 +97,7 @@ class ToDoListController extends AbstractController
             $this->getDoctrine()->getManager()->flush();
             $this->addFlash('success', 'Votre tâche a bien été éditée :-)');
 
-            return $this->redirectToRoute('front_todo_list');
+            return $this->redirectToRoute('task_list');
         }
 
         return $this->render('front/todo_list/edit.html.twig', [
@@ -109,7 +107,7 @@ class ToDoListController extends AbstractController
     }
 
     /**
-     * @Route("/manage/{id}", options={"expose"=true}, name="handle-task", methods={"GET","POST"})
+     * @Route("/manage/status/task/{id}", options={"expose"=true}, name="change-task-status", methods={"GET","POST"})
      * @param Task                   $task
      * @param Request                $request
      *
@@ -117,7 +115,7 @@ class ToDoListController extends AbstractController
      *
      * @return JsonResponse
      */
-    public function handleTaskAction(Task $task, Request $request, EntityManagerInterface $em)
+    public function changeTaskStatus(Task $task, Request $request, EntityManagerInterface $em)
     {
         if ($request->get('checked') === 'false') {
             $task->setIsCompleted(true);
@@ -126,8 +124,7 @@ class ToDoListController extends AbstractController
         }
         else {
             $task->setIsCompleted(false);
-            $this->addFlash('warning', '
-            Il vous reste du boulot, gare à la procrastination!');
+            $this->addFlash('warning', 'Il vous reste du boulot, gare à la procrastination!');
         }
         $em->persist($task);
         $em->flush();
