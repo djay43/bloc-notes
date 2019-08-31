@@ -82,7 +82,7 @@ class ToDoListController extends AbstractController
     }
 
     /**
-     * @Route("/edit/task/{id}", name="task_edit", methods={"GET","POST"})
+     * @Route("/task/edit/{slug}", name="task_edit", methods={"GET","POST"})
      * @param Request $request
      * @param Task    $task
      *
@@ -107,7 +107,7 @@ class ToDoListController extends AbstractController
     }
 
     /**
-     * @Route("/manage/status/task/{id}", options={"expose"=true}, name="change-task-status", methods={"GET","POST"})
+     * @Route("/task/manage/status/{id}", options={"expose"=true}, name="change-task-status", methods={"GET","POST"})
      * @param Task                   $task
      * @param Request                $request
      *
@@ -119,12 +119,12 @@ class ToDoListController extends AbstractController
     {
         if ($request->get('checked') === 'false') {
             $task->setIsCompleted(true);
-            $this->addFlash('success', ' et même <b>Incroyable!</b> Vous avez réalisée une tâche!');
+            $this->addFlash('success', ' et même <b>Incroyable !</b> Vous avez réalisée une tâche !');
 
         }
         else {
             $task->setIsCompleted(false);
-            $this->addFlash('warning', 'Il vous reste du boulot, gare à la procrastination!');
+            $this->addFlash('warning', 'Il vous reste du boulot, gare à la procrastination !');
         }
         $em->persist($task);
         $em->flush();

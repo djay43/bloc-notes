@@ -21,7 +21,7 @@ function handleSwitchChange() {
               id    = $this.data('id');
 
         $.ajax({
-            url    : Routing.generate('handle-task') + '/' + id,
+            url    : Routing.generate('change-task-status') + '/' + id,
             type   : 'POST',
             data   : {
                 'checked': $this.is(':checked')

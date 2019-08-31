@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\TaskRepository")
@@ -40,6 +41,12 @@ class Task
      * @ORM\Column(type="boolean")
      */
     private $isCompleted;
+
+    /**
+     * @ORM\Column(type="string", length=150)
+     * @Gedmo\Slug(fields={"name"})
+     */
+    private $slug;
 
     /**
      * Task constructor.
@@ -147,6 +154,18 @@ class Task
     public function setIsCompleted(bool $isCompleted): self
     {
         $this->isCompleted = $isCompleted;
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): self
+    {
+        $this->slug = $slug;
 
         return $this;
     }

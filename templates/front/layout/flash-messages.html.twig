@@ -1,6 +1,6 @@
     {% for flash_message in flashBag.get('success') %}
         <div class="alert alert-success alert-dismissible fade show w-50" role="alert">
-            <strong>Bravo!</strong> {{ flash_message|raw }}
+            <strong>Bravo !</strong> {{ flash_message|raw }}
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
@@ -8,7 +8,7 @@
     {% endfor %}
     {% for flash_message in flashBag.get('warning') %}
         <div class="alert alert-warning alert-dismissible fade show w-50" role="alert">
-            <strong>Attention!</strong> {{ flash_message|raw }}
+            <strong>Attention !</strong> {{ flash_message|raw }}
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>

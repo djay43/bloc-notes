@@ -11,13 +11,13 @@
     <table class="table table-hover" id="js-reload">
         <thead>
         <tr>
-            <th>Numéro</th>
+            <th>N°</th>
             <th>Statut</th>
             <th>Nom</th>
             <th>Description</th>
             <th>Date de fin</th>
-            <th>Action</th>
-            <th>Action</th>
+            <th>Actions</th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
@@ -40,7 +40,7 @@
                             Actions
                         </button>
                         <div class="dropdown-menu" style="height:70px;" aria-labelledby="dropdownMenuButton">
-                            <a href="{{ path('task_edit',{'id': task.id}) }}" class="dropdown-item">
+                            <a href="{{ path('task_edit',{'slug': task.slug}) }}" class="dropdown-item">
                                 Éditer
                             </a>
                             <form method="post" action="{{ path('task_delete', {'id': task.id}) }}"
