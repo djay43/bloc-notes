@@ -104,7 +104,7 @@ class TaskController extends AbstractController
     }
 
     /**
-     * @Route("/task/manage/status/{id}", options={"expose"=true}, name="change-task-status", methods={"GET","POST"})
+     * @Route("/task/manage/status/{slug}", options={"expose"=true}, name="change-task-status", methods={"GET","POST"})
      * @param Task                   $task
      * @param Request                $request
      * @param EntityManagerInterface $em

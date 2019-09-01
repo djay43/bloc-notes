@@ -51,6 +51,11 @@ class TaskControllerTest extends WebTestCase
         $crawler = $client->request('GET', '/task/edit/faire-du-code');
         $this->handleForm($crawler, $client, 'éditée');       // Test Edit Form
 
+        //Switch status Ajax request
+        $client->xmlHttpRequest('POST', '/task/manage/status/faire-du-code', ['checked' => false]);
+        $this->assertContains('false', $client->getResponse()->getContent());
+
+
         // Test Delete Code
         $crawler = $client->request('GET', '/');
         $form    = $crawler->selectButton('Supprimer')->form();
@@ -60,6 +65,7 @@ class TaskControllerTest extends WebTestCase
 
         $this->assertContains('Votre tâche a bien été supprimée :-)', $client->getResponse()->getContent());
     }
+
 
     /**
      * Submit Task Form Create/edit

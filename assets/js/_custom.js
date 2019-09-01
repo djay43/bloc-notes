@@ -18,16 +18,16 @@ function handleSwitchChange() {
     $('.custom-control-input').change(function() {
 
         const $this = $(this),
-              id    = $this.data('id');
+              slug    = $this.data('slug');
 
         $.ajax({
-            url    : Routing.generate('change-task-status') + '/' + id,
+            url    : Routing.generate('change-task-status') + '/' + slug,
             type   : 'POST',
             data   : {
                 'checked': $this.is(':checked')
             },
             success: function() {
-                $('.js-tr' + id).find('.spinner-border').removeClass('hidden')
+                $('.js-tr' + slug).find('.spinner-border').removeClass('hidden')
                 document.location.reload(true);
             }
         });
