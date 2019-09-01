@@ -15,6 +15,12 @@ yarn encore dev
 
 ## Usage
 
+Mettre en place la base de données
+
+```bash
+php bin/console doctrine:database:create && php bin/console doctrine:migrations:migrate --no-interaction
+```
+
 Pour une génération de tâches aléatoires lancez les fixtures:
 
 ```bash
